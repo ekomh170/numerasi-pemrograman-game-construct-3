@@ -2,15 +2,268 @@
 	"name": "ES_Level1_Tingkat1",
 	"events": [
 		{
-			"eventType": "script",
-			"language": "javascript",
-			"script": []
+			"eventType": "comment",
+			"text": "=== LEVEL 1 TINGKAT 1: COUNTING OBJECTS GAME ===\nMekanik: Pemain menghitung jumlah benda di kamar\nDevelopers: Eko Muchamad Haryono\nDate: November 10, 2025\n\nNOTE: Game logic ada di scripts/level1_tingkat1.js"
+		},
+		{
+			"eventType": "comment",
+			"text": "=== CARA MENGGUNAKAN ===\n1. Buka game di browser\n2. Tekan F12 untuk membuka Developer Console\n3. Klik icon benda untuk menghitung\n4. Lihat feedback di console\n5. Score system:\n   - 100 poin per jawaban benar\n   - ⭐ 1 star: 300-449 poin\n   - ⭐⭐ 2 stars: 450-599 poin  \n   - ⭐⭐⭐ 3 stars: 600-750 poin\n\n=== TROUBLESHOOTING ===\n- Jika object not found, cek nama object di layout\n- Nama object harus PERSIS match:\n  * 1selimutlvl1 (2 buah)\n  * 2bantallvl1 (2 buah)\n  * 3bonekalvl1 (2 buah)\n  * 4baju2lvl1 (2 buah)\n  * 5bukulvl1 (3 buah)"
 		},
 		{
 			"eventType": "block",
 			"conditions": [],
 			"actions": [],
 			"sid": 246821164520080
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "Mouse",
+					"sid": 719266075099381,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "1selimutlvl1"
+					}
+				}
+			],
+			"actions": [
+				{
+					"type": "script",
+					"language": "javascript",
+					"script": [
+						"lvl1t1_checkAnswer(0);"
+					]
+				}
+			],
+			"sid": 644460746408935
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "Mouse",
+					"sid": 272324305853892,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "2bantallvl1"
+					}
+				}
+			],
+			"actions": [
+				{
+					"type": "script",
+					"language": "javascript",
+					"script": [
+						"lvl1t1_checkAnswer(1);"
+					]
+				}
+			],
+			"sid": 866599030867748
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "Mouse",
+					"sid": 587108169579477,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "3bonekalvl1"
+					}
+				}
+			],
+			"actions": [
+				{
+					"type": "script",
+					"language": "javascript",
+					"script": [
+						"lvl1t1_checkAnswer(2);"
+					]
+				}
+			],
+			"sid": 354545696598899
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "Mouse",
+					"sid": 963153128775410,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "4baju1lvl1"
+					}
+				}
+			],
+			"actions": [
+				{
+					"type": "script",
+					"language": "javascript",
+					"script": [
+						"lvl1t1_checkAnswer(3);"
+					]
+				}
+			],
+			"sid": 584495775639183
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "Mouse",
+					"sid": 787845708637976,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "5bukulvl1"
+					}
+				}
+			],
+			"actions": [
+				{
+					"type": "script",
+					"language": "javascript",
+					"script": [
+						"lvl1t1_checkAnswer(4);"
+					]
+				}
+			],
+			"sid": 985880370874618
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "Mouse",
+					"sid": 128586821450793,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "benda1lvl1"
+					}
+				}
+			],
+			"actions": [
+				{
+					"type": "script",
+					"language": "javascript",
+					"script": [
+						"lvl1t1_showDetailView(0);"
+					]
+				}
+			],
+			"sid": 182182329417729
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "Mouse",
+					"sid": 246429710717773,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "benda2lvl1"
+					}
+				}
+			],
+			"actions": [
+				{
+					"type": "script",
+					"language": "javascript",
+					"script": [
+						"lvl1t1_showDetailView(1);"
+					]
+				}
+			],
+			"sid": 782716082963924
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "Mouse",
+					"sid": 734951527865814,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "benda3lvl1"
+					}
+				}
+			],
+			"actions": [
+				{
+					"type": "script",
+					"language": "javascript",
+					"script": [
+						"lvl1t1_showDetailView(2);"
+					]
+				}
+			],
+			"sid": 961703680915413
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "Mouse",
+					"sid": 916545130992067,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "benda4lvl1"
+					}
+				}
+			],
+			"actions": [
+				{
+					"type": "script",
+					"language": "javascript",
+					"script": [
+						"lvl1t1_showDetailView(3);"
+					]
+				}
+			],
+			"sid": 418509177409117
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "Mouse",
+					"sid": 332400530307042,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "benda5lvl1"
+					}
+				}
+			],
+			"actions": [
+				{
+					"type": "script",
+					"language": "javascript",
+					"script": [
+						"lvl1t1_showDetailView(4);"
+					]
+				}
+			],
+			"sid": 628034323653641
 		}
 	],
 	"sid": 689445406858030
