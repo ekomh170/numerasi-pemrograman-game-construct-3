@@ -5,7 +5,43 @@
 			"name": "Layer 0",
 			"overriden": 0,
 			"subLayers": [],
-			"instances": [],
+			"instances": [
+				{
+					"type": "RuangTamu",
+					"properties": {
+						"svg-file": 809129333216544,
+						"initially-visible": true,
+						"origin": "top-left"
+					},
+					"uid": 32,
+					"sid": 283542181540244,
+					"tags": "",
+					"instanceVariables": {},
+					"behaviors": {},
+					"instanceFolderItem": {
+						"sid": 283542181540244,
+						"expanded": true
+					},
+					"showing": true,
+					"locked": false,
+					"world": {
+						"x": 5,
+						"y": 5,
+						"width": 1275,
+						"height": 732.25,
+						"originX": 0,
+						"originY": 0,
+						"color": [
+							1,
+							1,
+							1,
+							1
+						],
+						"angle": 0,
+						"zElevation": 0
+					}
+				}
+			],
 			"sid": 967615114601665,
 			"effectTypes": [],
 			"isInitiallyVisible": true,

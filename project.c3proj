@@ -15,6 +15,13 @@
 		},
 		{
 			"type": "plugin",
+			"id": "SVGPicture",
+			"name": "SVG Picture",
+			"author": "Scirra",
+			"bundled": false
+		},
+		{
+			"type": "plugin",
 			"id": "Sprite",
 			"name": "Sprite",
 			"author": "Scirra",
@@ -31,24 +38,43 @@
 	"uniqueId": "ex3ewco6dud",
 	"objectTypes": {
 		"items": [
-			"BackgroundMenu1",
+			"0BackgroundMainMenu1",
 			"judulgame",
 			"startIcon",
-			"TemaKamarlvl1",
-			"maskot_lvl1_t1",
-			"selimut_lvl1_t1",
-			"boneka3_lvl1_t1",
-			"bantal3_lvl1_t1",
-			"benda1",
-			"benda2",
-			"benda3",
+			"0BackgroundKamarTidurlvl1_t3",
+			"maskotlvl1t1",
+			"1selimutdetaillvl1",
+			"3bonekadetaillvl1",
+			"2bantaldetaillvl1",
+			"benda1lvl1",
+			"benda2lvl1",
+			"benda3lvl1",
 			"Mouse",
 			"Touch",
-			"Group",
-			"Group2",
-			"Group3",
-			"Group4",
-			"Group5"
+			"benda5lvl1",
+			"benda4lvl1",
+			"4baju1lvl1",
+			"4bajudetaillvl1",
+			"5bukudetaillvl1",
+			"boneka1lvl1t3",
+			"boneka2lvl1t3",
+			"boneka3lvl1t3",
+			"boneka4lvl1t3",
+			"boneka5lvl1t3",
+			"maskotlvl1t3",
+			"boneka1lvl1t3out",
+			"boneka3lvl1t3out",
+			"boneka2lvl1t3out",
+			"boneka4lvl1t3out",
+			"boneka5lvl1t3out",
+			"RuangTamu",
+			"RuangTamu2",
+			"3bonekalvl1",
+			"2bantallvl1",
+			"1selimutlvl1",
+			"4baju2lvl1",
+			"5bukulvl1",
+			"0BackgroundKamarTidurlvl1_t1"
 		],
 		"subfolders": []
 	},
@@ -169,6 +195,22 @@
 					"name": "Desain tanpa judul.svg",
 					"type": "image/svg+xml",
 					"sid": 876858332328221,
+					"file-info": {
+						"purpose": "none"
+					}
+				},
+				{
+					"name": "Ruang Tamu.svg",
+					"type": "image/svg+xml",
+					"sid": 809129333216544,
+					"file-info": {
+						"purpose": "none"
+					}
+				},
+				{
+					"name": "Ruang Tamu (1).svg",
+					"type": "image/svg+xml",
+					"sid": 201215760028006,
 					"file-info": {
 						"purpose": "none"
 					}

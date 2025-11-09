@@ -7,7 +7,7 @@
 			"subLayers": [],
 			"instances": [
 				{
-					"type": "BackgroundMenu1",
+					"type": "0BackgroundMainMenu1",
 					"properties": {
 						"initially-visible": true,
 						"initial-animation": "Default",
