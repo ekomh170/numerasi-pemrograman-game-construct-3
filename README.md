@@ -51,7 +51,7 @@ Anak-anak belajar menghitung benda-benda di kamar tidur:
 - GitHub: [@ekomh170](https://github.com/ekomh170)
 
 **Anang Febryan Sutarja**
-- GitHub: [@anangfebryan](https://github.com/anangfebryan)
+- GitHub: [@anangfebrr](https://github.com/anangfebrr)
 
 ## 🙏 Acknowledgments
 
