@@ -1,0 +1,32 @@
+{
+	"name": "ES_MainMenu",
+	"events": [
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "Mouse",
+					"sid": 598631286353100,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "startIcon"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "go-to-layout",
+					"objectClass": "System",
+					"sid": 222616541824222,
+					"parameters": {
+						"layout": "Level1_Tingkat1"
+					}
+				}
+			],
+			"sid": 866142637636703
+		}
+	],
+	"sid": 980692421850772
+}
