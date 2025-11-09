@@ -7,7 +7,7 @@
 			"subLayers": [],
 			"instances": [
 				{
-					"type": "RuangTamu2",
+					"type": "0RuangTamulvl2_t2",
 					"properties": {
 						"svg-file": 201215760028006,
 						"initially-visible": true,
