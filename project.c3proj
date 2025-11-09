@@ -53,7 +53,6 @@
 			"Touch",
 			"benda5lvl1",
 			"benda4lvl1",
-			"4baju1lvl1",
 			"4bajudetaillvl1",
 			"5bukudetaillvl1",
 			"boneka1lvl1t3",
@@ -72,7 +71,7 @@
 			"3bonekalvl1",
 			"2bantallvl1",
 			"1selimutlvl1",
-			"4baju2lvl1",
+			"4baju1lvl1",
 			"5bukulvl1",
 			"0BackgroundKamarTidurlvl1_t1"
 		],
@@ -109,7 +108,24 @@
 	},
 	"rootFileFolders": {
 		"script": {
-			"items": [],
+			"items": [
+				{
+					"name": "main.js",
+					"type": "application/javascript",
+					"sid": 123456789012345,
+					"script-info": {
+						"purpose": "main"
+					}
+				},
+				{
+					"name": "level1_tingkat1.js",
+					"type": "application/javascript",
+					"sid": 876543210987654,
+					"script-info": {
+						"purpose": "imports-for-events"
+					}
+				}
+			],
 			"subfolders": []
 		},
 		"sound": {
