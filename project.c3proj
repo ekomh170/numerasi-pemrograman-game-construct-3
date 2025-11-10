@@ -73,7 +73,10 @@
 			"1selimutlvl1",
 			"4baju1lvl1",
 			"5bukulvl1",
-			"0BackgroundKamarTidurlvl1_t1"
+			"0BackgroundKamarTidurlvl1_t1",
+			"0_Bg_Intruksi1_Level1_Tingkat1",
+			"0_Bg_Intruksi2_Level1_Tingkat1",
+			"0_Bg_Intruksi3_Level1_Tingkat1"
 		],
 		"subfolders": []
 	},
@@ -87,6 +90,9 @@
 	"layouts": {
 		"items": [
 			"MainMenu",
+			"Intruksi1_Level1_Tingkat1",
+			"Intruksi2_Level1_Tingkat1",
+			"Intruksi3_Level1_Tingkat1",
 			"Level1_Tingkat1",
 			"Level1_Tingkat2",
 			"Level1_Tingkat3",
@@ -102,7 +108,8 @@
 			"ES_Level1_Tingkat2",
 			"ES_Level1_Tingkat3",
 			"ES_Level2_Tingkat1",
-			"ES_Level2_Tingkat2"
+			"ES_Level2_Tingkat2",
+			"ES_Intruksi_Level1_Tingkat1_T1"
 		],
 		"subfolders": []
 	},
@@ -123,6 +130,14 @@
 					"sid": 876543210987654,
 					"script-info": {
 						"purpose": "imports-for-events"
+					}
+				},
+				{
+					"name": "level1_tingkat3.js",
+					"type": "application/javascript",
+					"sid": 305400661433029,
+					"script-info": {
+						"purpose": "none"
 					}
 				}
 			],
