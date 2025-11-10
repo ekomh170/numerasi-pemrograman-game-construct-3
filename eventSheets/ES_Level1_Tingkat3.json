@@ -1,5 +1,28 @@
 {
 	"name": "ES_Level1_Tingkat3",
-	"events": [],
+	"events": [
+		{
+			"eventType": "comment",
+			"text": "=== LEVEL 1 TINGKAT 3: MATCH THE DOLLS ===\nMekanik: Drag boneka kecil ke boneka besar yang cocok\nDevelopers: Eko Muchamad Haryono & Anang Febryan Sutarja\nDate: November 10, 2025\n\nNOTE: Game logic ada di scripts/level1_tingkat3.js"
+		},
+		{
+			"eventType": "comment",
+			"text": "=== CARA BERMAIN ===\n1. Drag boneka KECIL dari dalam kamar\n2. Drop ke boneka BESAR di bagian bawah yang cocok\n3. Jika cocok, boneka kecil akan hilang dan score bertambah\n4. Selesaikan semua 5 boneka untuk menang!\n\n=== SCORE SYSTEM ===\n- 150 poin per boneka yang cocok\n- Perfect score: 750 poin\n- ⭐⭐⭐ 3 stars: 600+ poin\n- ⭐⭐ 2 stars: 450+ poin\n- ⭐ 1 star: 300+ poin"
+		},
+		{
+			"eventType": "block",
+			"conditions": [],
+			"actions": [],
+			"sid": 100000000000001
+		},
+		{
+			"eventType": "comment",
+			"text": "=== DRAG & DROP EVENTS ===\nTambahkan Drag & Drop behavior ke semua boneka kecil di Construct 3 Editor:\n- boneka1lvl1t3 → Add Behavior → Drag & Drop\n- boneka2lvl1t3 → Add Behavior → Drag & Drop\n- boneka3lvl1t3 → Add Behavior → Drag & Drop\n- boneka4lvl1t3 → Add Behavior → Drag & Drop\n- boneka5lvl1t3 → Add Behavior → Drag & Drop\n\nKemudian tambahkan events berikut untuk masing-masing boneka:"
+		},
+		{
+			"eventType": "comment",
+			"text": "=== CONTOH EVENT (Manual Setup di Construct 3) ===\n\nEvent: boneka1lvl1t3 → On drop\n  Condition: boneka1lvl1t3 is overlapping boneka1lvl1t3out\n  Action: Script → lvl1t3_onDollDropped(0);\n\nEvent: boneka2lvl1t3 → On drop\n  Condition: boneka2lvl1t3 is overlapping boneka2lvl1t3out\n  Action: Script → lvl1t3_onDollDropped(1);\n\nEvent: boneka3lvl1t3 → On drop\n  Condition: boneka3lvl1t3 is overlapping boneka3lvl1t3out\n  Action: Script → lvl1t3_onDollDropped(2);\n\nEvent: boneka4lvl1t3 → On drop\n  Condition: boneka4lvl1t3 is overlapping boneka4lvl1t3out\n  Action: Script → lvl1t3_onDollDropped(3);\n\nEvent: boneka5lvl1t3 → On drop\n  Condition: boneka5lvl1t3 is overlapping boneka5lvl1t3out\n  Action: Script → lvl1t3_onDollDropped(4);\n\n=== RESET POSITION (Opsional) ===\nJika ingin boneka kembali ke posisi awal saat drop salah:\n\nEvent: boneka1lvl1t3 → On drop\n  Condition: boneka1lvl1t3 is NOT overlapping boneka1lvl1t3out\n  Action: Script → lvl1t3_resetDollPosition(0);"
+		}
+	],
 	"sid": 946109365367347
 }
