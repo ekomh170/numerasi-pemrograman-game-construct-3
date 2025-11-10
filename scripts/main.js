@@ -24,7 +24,7 @@ runOnStartup(async runtime =>
 async function OnBeforeProjectStart(runtime)
 {
 	// Global project initialization
-	console.log('� Project initialized');
+	console.log('Project initialized');
 	
 	runtime.addEventListener("tick", () => Tick(runtime));
 }
