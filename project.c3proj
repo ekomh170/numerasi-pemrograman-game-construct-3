@@ -77,7 +77,7 @@
 			"0_Bg_Intruksi1_Level1_Tingkat1",
 			"0_Bg_Intruksi2_Level1_Tingkat1",
 			"0_Bg_Intruksi3_Level1_Tingkat1",
-			"Background",
+			"0Background",
 			"LogoLevel",
 			"Level1_Tingkat2",
 			"Level1_Tingkat3",
@@ -87,7 +87,20 @@
 			"Level3_Tingkat1",
 			"Level3_Tingkat2",
 			"Level3_Tingkat3",
-			"Level1_Tingkat1"
+			"Level1_Tingkat1",
+			"1kotakjawabanlvl1t1",
+			"0BackgroundBlur",
+			"reward_bintang",
+			"reward_kotak_tombol",
+			"reward_kata_berhasil",
+			"reward_next_game",
+			"reward_coba_lagi",
+			"reward_home",
+			"Sprite",
+			"3kotakjawabanlvl1t1",
+			"2kotakjawabanlvl1t1",
+			"5kotakjawabanlvl1t1",
+			"4kotakjawabanlvl1t1"
 		],
 		"subfolders": []
 	},
@@ -106,6 +119,7 @@
 			"Intruksi2_Level1_Tingkat1",
 			"Intruksi3_Level1_Tingkat1",
 			"Level1_Tingkat1",
+			"Level1_Tingkat1_Reward",
 			"Level1_Tingkat2",
 			"Level1_Tingkat3",
 			"Level2_Tingkat1",
@@ -124,7 +138,8 @@
 			"ES_Intruksi1_Level1_Tingkat1_T1",
 			"ES_Level_Page",
 			"ES_Intruksi2_Level1_Tingkat1_T1",
-			"ES_Intruksi3_Level1_Tingkat1_T1"
+			"ES_Intruksi3_Level1_Tingkat1_T1",
+			"ES_Level1_Tingkat1_Reward"
 		],
 		"subfolders": []
 	},
