@@ -34,7 +34,7 @@
 					"type": "script",
 					"language": "javascript",
 					"script": [
-						"lvl1t1_checkAnswer(0);"
+						"lvl1t1_checkAnswer(1);"
 					]
 				}
 			],
@@ -59,7 +59,7 @@
 					"type": "script",
 					"language": "javascript",
 					"script": [
-						"lvl1t1_checkAnswer(1);"
+						"lvl1t1_checkAnswer(2);"
 					]
 				}
 			],
@@ -84,7 +84,7 @@
 					"type": "script",
 					"language": "javascript",
 					"script": [
-						"lvl1t1_checkAnswer(2);"
+						"lvl1t1_checkAnswer(3);"
 					]
 				}
 			],
@@ -109,7 +109,7 @@
 					"type": "script",
 					"language": "javascript",
 					"script": [
-						"lvl1t1_checkAnswer(3);"
+						"lvl1t1_checkAnswer(4);"
 					]
 				}
 			],
@@ -134,7 +134,7 @@
 					"type": "script",
 					"language": "javascript",
 					"script": [
-						"lvl1t1_checkAnswer(4);"
+						"lvl1t1_checkAnswer(5);"
 					]
 				}
 			],
