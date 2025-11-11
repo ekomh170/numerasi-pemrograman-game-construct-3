@@ -27,10 +27,10 @@
 					"showing": true,
 					"locked": false,
 					"world": {
-						"x": 639,
-						"y": 359,
-						"width": 1287,
-						"height": 725,
+						"x": 640.0567561346462,
+						"y": 360.0615058132991,
+						"width": 1280.4083468376864,
+						"height": 720.0962219381839,
 						"originX": 0.5,
 						"originY": 0.5,
 						"color": [
@@ -87,5 +87,5 @@
 	"vpX": 0.5,
 	"vpY": 0.5,
 	"projection": "perspective",
-	"eventSheet": "ES_Intruksi_Level1_Tingkat1_T1"
+	"eventSheet": "ES_Intruksi1_Level1_Tingkat1_T1"
 }

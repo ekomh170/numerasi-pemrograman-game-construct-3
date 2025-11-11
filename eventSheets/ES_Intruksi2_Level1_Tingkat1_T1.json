@@ -1,0 +1,27 @@
+{
+	"name": "ES_Intruksi2_Level1_Tingkat1_T1",
+	"events": [
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-any-click",
+					"objectClass": "Mouse",
+					"sid": 293570612853840
+				}
+			],
+			"actions": [
+				{
+					"id": "go-to-layout",
+					"objectClass": "System",
+					"sid": 673863670826827,
+					"parameters": {
+						"layout": "Intruksi3_Level1_Tingkat1"
+					}
+				}
+			],
+			"sid": 238573421322060
+		}
+	],
+	"sid": 625512776672109
+}

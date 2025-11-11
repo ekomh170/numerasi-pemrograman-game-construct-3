@@ -15,22 +15,22 @@
 						"enable-collisions": true,
 						"live-preview": false
 					},
-					"uid": 46,
-					"sid": 788006054909828,
+					"uid": 59,
+					"sid": 576779243173870,
 					"tags": "",
 					"instanceVariables": {},
 					"behaviors": {},
 					"instanceFolderItem": {
-						"sid": 788006054909828,
+						"sid": 576779243173870,
 						"expanded": true
 					},
 					"showing": true,
 					"locked": false,
 					"world": {
-						"x": 634,
-						"y": 368,
-						"width": 1265,
-						"height": 722,
+						"x": 640.1421033159236,
+						"y": 360.0647342924721,
+						"width": 1280.796957130589,
+						"height": 720.8640091988129,
 						"originX": 0.5,
 						"originY": 0.5,
 						"color": [
@@ -44,7 +44,7 @@
 					}
 				}
 			],
-			"sid": 513970979255334,
+			"sid": 940926358665929,
 			"effectTypes": [],
 			"isInitiallyVisible": true,
 			"isInitiallyInteractive": true,
@@ -78,7 +78,7 @@
 		"items": [],
 		"subfolders": []
 	},
-	"sid": 674221595091538,
+	"sid": 174086978331016,
 	"nonworld-instances": [],
 	"effectTypes": [],
 	"width": 2560,
@@ -87,5 +87,5 @@
 	"vpX": 0.5,
 	"vpY": 0.5,
 	"projection": "perspective",
-	"eventSheet": "Event sheet 1"
+	"eventSheet": "ES_Intruksi3_Level1_Tingkat1_T1"
 }
