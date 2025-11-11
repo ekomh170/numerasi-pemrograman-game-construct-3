@@ -14,17 +14,68 @@ let lvl1t1_currentItem = 0;  // Current item being counted (0-4)
 let lvl1t1_score = 0;        // Player score
 let lvl1t1_itemsCompleted = 0; // Number of items completed
 let lvl1t1_isProcessing = false; // Prevent double clicks
+let lvl1t1_clickSequence = []; // Array untuk track urutan klik (0-based index)
 
 // Item configuration
-// iconName = object yang DI-KLIK oleh player (icon di UI)
-// objectName = object yang DIHITUNG jumlahnya di scene (detail benda)
+// name = nama benda (untuk display)
+// detailName = object detail untuk pop-up view (reward saat benar)
+// correctCount = JAWABAN BENAR (hardcoded, tidak dihitung dari instance)
 const lvl1t1_items = [
-	{ name: 'Selimut', objectName: '1selimutdetaillvl1', correctCount: 1, iconName: '1selimutlvl1' },
-	{ name: 'Bantal',  objectName: '2bantaldetaillvl1',  correctCount: 1, iconName: '2bantallvl1' },
-	{ name: 'Boneka',  objectName: '3bonekadetaillvl1',  correctCount: 1, iconName: '3bonekalvl1' },
-	{ name: 'Baju',    objectName: '4bajudetaillvl1',    correctCount: 1, iconName: '4baju1lvl1' },
-	{ name: 'Buku',    objectName: '5bukudetaillvl1',    correctCount: 1, iconName: '5bukulvl1' }
+	{ name: 'Selimut', detailName: '1selimutdetaillvl1', correctCount: 1 },
+	{ name: 'Bantal',  detailName: '2bantaldetaillvl1',  correctCount: 2 },
+	{ name: 'Boneka',  detailName: '3bonekadetaillvl1',  correctCount: 3 },
+	{ name: 'Baju',    detailName: '4bajudetaillvl1',    correctCount: 4 },
+	{ name: 'Buku',    detailName: '5bukudetaillvl1',    correctCount: 5 }
 ];
+
+// Kotak jawaban configuration (5 object terpisah)
+const lvl1t1_answerBoxes = [
+	'1kotakjawabanlvl1t1', // Kotak angka 1
+	'2kotakjawabanlvl1t1', // Kotak angka 2
+	'3kotakjawabanlvl1t1', // Kotak angka 3
+	'4kotakjawabanlvl1t1', // Kotak angka 4
+	'5kotakjawabanlvl1t1'  // Kotak angka 5
+];
+
+// ========================================
+// KOTAK JAWABAN FUNCTIONS
+// ========================================
+
+// Function untuk update visual kotak jawaban
+function lvl1t1_updateAnswerBox(boxIndex, numberValue, runtime) {
+	const rt = runtime || lvl1t1_runtime;
+	if (!rt) {
+		console.error('❌ [L1T1] Runtime not available in updateAnswerBox');
+		return;
+	}
+	
+	const boxName = lvl1t1_answerBoxes[boxIndex];
+	
+	try {
+		const boxObject = rt.objects[boxName];
+		if (boxObject) {
+			const instances = boxObject.getAllInstances();
+			if (instances.length > 0) {
+				const box = instances[0];
+				
+				// Jika box punya Text property, update text
+				if (box.text !== undefined) {
+					box.text = numberValue.toString();
+					console.log('📝 [L1T1] Updated box', boxIndex + 1, 'with number:', numberValue);
+				}
+				
+				// Jika box punya AnimationFrame, set ke frame tertentu
+				// Frame 0 = kosong, Frame 1-5 = angka 1-5
+				if (box.animationFrame !== undefined && numberValue >= 1 && numberValue <= 5) {
+					box.animationFrame = numberValue; // Set ke frame angka
+					console.log('🎬 [L1T1] Updated box', boxIndex + 1, 'animation frame to:', numberValue);
+				}
+			}
+		}
+	} catch (e) {
+		console.warn('⚠️ [L1T1] Could not update box:', boxName, e.message);
+	}
+}
 
 // ========================================
 // DETAIL VIEW FUNCTIONS
@@ -41,7 +92,7 @@ function lvl1t1_hideAllDetailViews(runtime) {
 	// Hide all detail objects (the actual detail sprites)
 	lvl1t1_items.forEach(item => {
 		try {
-			const objectClass = rt.objects[item.objectName];
+			const objectClass = rt.objects[item.detailName];
 			if (objectClass) {
 				const instances = objectClass.getAllInstances();
 				instances.forEach(inst => {
@@ -49,7 +100,7 @@ function lvl1t1_hideAllDetailViews(runtime) {
 				});
 			}
 		} catch (e) {
-			console.warn('⚠️ [L1T1] Could not hide:', item.objectName, e.message);
+			console.warn('⚠️ [L1T1] Could not hide:', item.detailName, e.message);
 		}
 	});
 	
@@ -65,10 +116,10 @@ function lvl1t1_showDetailView(itemIndex, runtime) {
 	}
 	
 	const item = lvl1t1_items[itemIndex];
-	const detailObjectName = item.objectName; // e.g., '1selimutdetaillvl1'
+	const detailObjectName = item.detailName; // e.g., '1selimutdetaillvl1'
 	
 	try {
-		// Access detail object (the ACTUAL detail sprite, not benda)
+		// Access detail object (the ACTUAL detail sprite)
 		const objectClass = rt.objects[detailObjectName];
 		
 		if (objectClass) {
@@ -132,8 +183,9 @@ function lvl1t1_showDetailView(itemIndex, runtime) {
 // GAME LOGIC FUNCTIONS
 // ========================================
 
-// Function to check answer - DIPANGGIL DARI CONSTRUCT 3 EVENTS
-function lvl1t1_checkAnswer(itemIndex, runtime) {
+// Function untuk klik kotak jawaban - DIPANGGIL DARI CONSTRUCT 3 EVENTS
+// numberValue = angka kotak yang di-klik (1, 2, 3, 4, atau 5)
+function lvl1t1_checkAnswer(numberValue, runtime) {
 	const rt = runtime || lvl1t1_runtime;
 	if (!rt) {
 		console.error('❌ [L1T1] Runtime not available in checkAnswer');
@@ -152,56 +204,46 @@ function lvl1t1_checkAnswer(itemIndex, runtime) {
 		return;
 	}
 	
-	if (itemIndex !== lvl1t1_currentItem) {
-		console.log('❌ [L1T1] Not this item\'s turn yet!');
-		console.log('💡 Current task:', lvl1t1_items[lvl1t1_currentItem].name);
-		
-		// Show alert for wrong item clicked
-		alert('❌ SALAH URUTAN!\n\nTugas sekarang: Hitung ' + lvl1t1_items[lvl1t1_currentItem].name + '\n\nKlik icon yang benar!');
-		return;
-	}
-	
 	lvl1t1_isProcessing = true;
 	
-	// Show detail view of clicked item
-	lvl1t1_showDetailView(itemIndex, rt);
-	
-	const item = lvl1t1_items[itemIndex];
-	
-	// Get all instances of the object type
-	const objectType = rt.objects[item.objectName];
-	
-	if (!objectType) {
-		console.error('❌ [L1T1] Object type not found:', item.objectName);
-		console.log('💡 Available objects:', Object.keys(rt.objects));
-		lvl1t1_isProcessing = false;
-		return;
-	}
-	
-	const actualCount = objectType.getAllInstances().length;
-	const expectedCount = item.correctCount;
+	const item = lvl1t1_items[lvl1t1_currentItem];
+	const correctAnswer = item.correctCount;
 	
 	console.log('');
-	console.log('🔍 [L1T1] Checking:', item.name);
-	console.log('Expected:', expectedCount, '| Found:', actualCount);
+	console.log('🔢 [L1T1] Kotak jawaban di-klik:', numberValue);
+	console.log('📝 Tugas sekarang:', item.name);
+	console.log('✅ Jawaban benar:', correctAnswer);
+	console.log('👆 Player jawab:', numberValue);
 	
-	if (actualCount === expectedCount) {
+	// TRACKING: Simpan klik ke array (0-based index dari items)
+	lvl1t1_clickSequence.push(lvl1t1_currentItem);
+	
+	// UPDATE VISUAL: Tampilkan angka di kotak sesuai urutan klik
+	const boxIndex = lvl1t1_clickSequence.length - 1; // Kotak ke berapa (0-4)
+	lvl1t1_updateAnswerBox(boxIndex, numberValue, rt);
+	
+	if (numberValue === correctAnswer) {
 		// CORRECT ANSWER
 		const baseScore = 100;
-		const bonusScore = 50; // Bonus untuk jawaban benar
+		const bonusScore = 50;
 		lvl1t1_score += baseScore + bonusScore;
 		lvl1t1_itemsCompleted++;
-		lvl1t1_currentItem++;
 		
-		console.log('✅ [L1T1] CORRECT!', item.name);
+		console.log('✅ [L1T1] BENAR!', item.name, '=', correctAnswer);
 		console.log('💰 Score: +' + (baseScore + bonusScore) + ' | Total:', lvl1t1_score);
 		console.log('📊 Progress:', lvl1t1_itemsCompleted, '/5');
 		console.log('');
+		
+		// Show detail view sebagai reward
+		lvl1t1_showDetailView(lvl1t1_currentItem, rt);
 		
 		// Update UI
 		lvl1t1_showFeedback(true, rt);
 		lvl1t1_updateScore(rt);
 		lvl1t1_updateProgress(rt);
+		
+		// Move to next item
+		lvl1t1_currentItem++;
 		
 		// Check if all items completed
 		if (lvl1t1_itemsCompleted === 5) {
@@ -216,13 +258,13 @@ function lvl1t1_checkAnswer(itemIndex, runtime) {
 			console.log('=================================');
 			console.log('');
 			
-			// Show completion screen
+			// Show completion screen (after detail disappears)
 			setTimeout(() => {
 				lvl1t1_showGameComplete(rt);
-			}, 2000);
+			}, 3000);
 		} else {
-			console.log('📝 Next task:', lvl1t1_items[lvl1t1_currentItem].name);
-			console.log('💡 Hint: Count the', lvl1t1_items[lvl1t1_currentItem].name, 'in the room');
+			console.log('📝 Tugas selanjutnya:', lvl1t1_items[lvl1t1_currentItem].name);
+			console.log('💡 Hint: Hitung', lvl1t1_items[lvl1t1_currentItem].name, 'di kamar');
 			
 			// Update task display after feedback disappears
 			setTimeout(() => {
@@ -231,21 +273,21 @@ function lvl1t1_checkAnswer(itemIndex, runtime) {
 		}
 	} else {
 		// WRONG ANSWER
-		console.log('❌ [L1T1] WRONG! Try again.');
-		console.log('💡 Expected:', expectedCount, '| But found:', actualCount);
-		console.log('💡 Hint: Look carefully, count the', item.name, 'in the room');
+		console.log('❌ [L1T1] SALAH! Try again.');
+		console.log('💡 Expected:', correctAnswer, '| Player answered:', numberValue);
+		console.log('💡 Hint: Hitung lagi', item.name, 'dengan teliti');
 		console.log('');
 		
-		// Show detailed wrong feedback with counts
+		// Show detailed wrong feedback
 		const feedbackMessage = '❌ SALAH!\n\n' +
-			'Item: ' + item.name + '\n' +
-			'Seharusnya: ' + expectedCount + '\n' +
-			'Yang dihitung: ' + actualCount + '\n\n' +
+			'Tugas: Hitung ' + item.name + '\n' +
+			'Jawaban Kamu: ' + numberValue + '\n' +
+			'Jawaban Benar: ' + correctAnswer + '\n\n' +
 			'Coba hitung lagi dengan teliti!';
 		
 		alert(feedbackMessage);
 		
-		// Try to use Text object if exists
+		// Show feedback
 		lvl1t1_showFeedback(false, rt);
 	}
 	
@@ -431,15 +473,17 @@ runOnStartup(async runtime =>
 	lvl1t1_runtime = runtime;
 	
 	// Export functions to global scope with level-specific prefix
-	globalThis.lvl1t1_checkAnswer = (itemIndex) => lvl1t1_checkAnswer(itemIndex);
+	globalThis.lvl1t1_checkAnswer = (numberValue) => lvl1t1_checkAnswer(numberValue, runtime);
 	globalThis.lvl1t1_getStarRating = lvl1t1_getStarRating;
-	globalThis.lvl1t1_showDetailView = (itemIndex) => lvl1t1_showDetailView(itemIndex);
-	globalThis.lvl1t1_hideAllDetailViews = () => lvl1t1_hideAllDetailViews();
-	globalThis.lvl1t1_updateUI = () => lvl1t1_updateUI();
-	globalThis.lvl1t1_showFeedback = (isCorrect) => lvl1t1_showFeedback(isCorrect);
+	globalThis.lvl1t1_showDetailView = (itemIndex) => lvl1t1_showDetailView(itemIndex, runtime);
+	globalThis.lvl1t1_hideAllDetailViews = () => lvl1t1_hideAllDetailViews(runtime);
+	globalThis.lvl1t1_updateUI = () => lvl1t1_updateUI(runtime);
+	globalThis.lvl1t1_showFeedback = (isCorrect) => lvl1t1_showFeedback(isCorrect, runtime);
+	globalThis.lvl1t1_updateAnswerBox = (boxIndex, numberValue) => lvl1t1_updateAnswerBox(boxIndex, numberValue, runtime);
 	
 	console.log('✅ [L1T1] Game functions registered to global scope');
-	console.log('Functions: lvl1t1_checkAnswer, lvl1t1_getStarRating, etc.');
+	console.log('📦 lvl1t1_checkAnswer(numberValue) - Terima angka 1-5 dari kotak jawaban');
+	console.log('📦 lvl1t1_updateAnswerBox(boxIndex, numberValue) - Update visual kotak jawaban');
 	
 	runtime.addEventListener("beforeprojectstart", () => OnBeforeProjectStart_L1T1(runtime));
 });
@@ -455,6 +499,7 @@ async function OnBeforeProjectStart_L1T1(runtime)
 		lvl1t1_score = 0;
 		lvl1t1_itemsCompleted = 0;
 		lvl1t1_isProcessing = false;
+		lvl1t1_clickSequence = []; // Reset click sequence
 		
 		console.log('=================================');
 		console.log('🎮 [L1T1] GAME INITIALIZED');
