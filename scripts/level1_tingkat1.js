@@ -1,25 +1,25 @@
 
 // ========================================
-// LEVEL 1 TINGKAT 1 - GAME LOGIC
-// Kamar Tidur - Counting Objects Game
-// Developers: Eko Muchamad Haryono & Anang Febryan Sutarja
-// Date: November 10, 2025
+// LEVEL 1 TINGKAT 1 - LOGIKA GAME
+// Kamar Tidur - Game Menghitung Benda
+// Pengembang: Eko Muchamad Haryono & Anang Febryan Sutarja
+// Tanggal: 10 November 2025
 // ========================================
 
-// Runtime reference (will be set in runOnStartup)
+// Referensi runtime (akan di-set di runOnStartup)
 let lvl1t1_runtime = null;
 
-// Game state variables
-let lvl1t1_currentItem = 0;  // Current item being counted (0-4)
-let lvl1t1_score = 0;        // Player score
-let lvl1t1_itemsCompleted = 0; // Number of items completed
-let lvl1t1_isProcessing = false; // Prevent double clicks
-let lvl1t1_clickSequence = []; // Array untuk track urutan klik (0-based index)
+// Variabel state game
+let lvl1t1_currentItem = 0;  // Item yang sedang dihitung (0-4)
+let lvl1t1_score = 0;        // Skor pemain
+let lvl1t1_itemsCompleted = 0; // Jumlah item yang sudah selesai
+let lvl1t1_isProcessing = false; // Mencegah double klik
+let lvl1t1_clickSequence = []; // Array untuk melacak urutan klik (index mulai 0)
 
-// Item configuration
-// name = nama benda (untuk display)
-// detailName = object detail untuk pop-up view (reward saat benar)
-// correctCount = JAWABAN BENAR (hardcoded, tidak dihitung dari instance)
+// Konfigurasi item
+// name = nama benda (untuk tampilan)
+// detailName = objek detail untuk pop-up (reward jika benar)
+// correctCount = JAWABAN BENAR (hardcoded, bukan dari jumlah instance)
 const lvl1t1_items = [
 	{ name: 'Selimut', detailName: '1selimutdetaillvl1', correctCount: 1 },
 	{ name: 'Bantal',  detailName: '2bantaldetaillvl1',  correctCount: 2 },
@@ -28,7 +28,7 @@ const lvl1t1_items = [
 	{ name: 'Buku',    detailName: '5bukudetaillvl1',    correctCount: 5 }
 ];
 
-// Kotak jawaban configuration (5 object terpisah)
+// Konfigurasi kotak jawaban (5 objek terpisah)
 const lvl1t1_answerBoxes = [
 	'1kotakjawabanlvl1t1', // Kotak angka 1
 	'2kotakjawabanlvl1t1', // Kotak angka 2
@@ -37,11 +37,110 @@ const lvl1t1_answerBoxes = [
 	'5kotakjawabanlvl1t1'  // Kotak angka 5
 ];
 
+// Konfigurasi icon benda (5 icon untuk dipindahkan ke kotak)
+const lvl1t1_bendaIcons = [
+	'benda1lvl1', // Icon Selimut
+	'benda2lvl1', // Icon Bantal
+	'benda3lvl1', // Icon Boneka
+	'benda4lvl1', // Icon Baju
+	'benda5lvl1'  // Icon Buku
+];
+
 // ========================================
-// KOTAK JAWABAN FUNCTIONS
+// FUNGSI KOTAK JAWABAN
 // ========================================
 
-// Function untuk update visual kotak jawaban
+// Array untuk menyimpan icon benda yang sudah dipindahkan
+let lvl1t1_movedBendaIcons = [];
+
+// Fungsi untuk memindahkan icon benda ke dalam kotak
+function lvl1t1_moveBendaToBox(itemIndex, numberValue, runtime) {
+	const rt = runtime || lvl1t1_runtime;
+	if (!rt) return;
+	
+	// itemIndex = index item yang diklik (0-4)
+	// numberValue = jawaban benar (1-5)
+	
+	const bendaIconName = lvl1t1_bendaIcons[itemIndex]; // e.g., 'benda1lvl1'
+	const targetBoxName = lvl1t1_answerBoxes[numberValue - 1]; // e.g., '1kotakjawabanlvl1t1'
+	
+	try {
+		// Ambil objek icon benda
+		const bendaIconObject = rt.objects[bendaIconName];
+		if (!bendaIconObject) {
+			console.warn('⚠️ [L1T1] Benda icon not found:', bendaIconName);
+			return;
+		}
+		
+		const bendaInstances = bendaIconObject.getAllInstances();
+		if (bendaInstances.length === 0) {
+			console.warn('⚠️ [L1T1] No instances for benda icon:', bendaIconName);
+			return;
+		}
+		
+		const bendaIcon = bendaInstances[0];
+		
+		// Ambil objek kotak target
+		const boxObject = rt.objects[targetBoxName];
+		if (!boxObject) {
+			console.warn('⚠️ [L1T1] Target box not found:', targetBoxName);
+			return;
+		}
+		
+		const boxInstances = boxObject.getAllInstances();
+		if (boxInstances.length === 0) {
+			console.warn('⚠️ [L1T1] No instances for box:', targetBoxName);
+			return;
+		}
+		
+		const targetBox = boxInstances[0];
+		
+		// PINDAHKAN icon benda ke posisi kotak!
+		bendaIcon.x = targetBox.x;
+		bendaIcon.y = targetBox.y;
+		
+		// Skala icon agar pas di kotak
+		// Simpan ukuran asli dulu
+		const originalWidth = bendaIcon.width;
+		const originalHeight = bendaIcon.height;
+		
+		// Ukuran target untuk icon di dalam kotak (lebih kecil)
+		const targetSize = 60; // 60 pixels
+		
+		// Hitung rasio skala berdasarkan dimensi terbesar
+		const currentMaxDimension = Math.max(originalWidth, originalHeight);
+		const scaleRatio = targetSize / currentMaxDimension;
+		
+		bendaIcon.width = originalWidth * scaleRatio;
+		bendaIcon.height = originalHeight * scaleRatio;
+		
+		// Set z-elevation lebih tinggi agar icon di atas kotak
+		bendaIcon.zElevation = targetBox.zElevation + 10;
+		
+		// Pastikan icon terlihat
+		bendaIcon.isVisible = true;
+		bendaIcon.opacity = 1;
+		
+		// Simpan referensi
+		lvl1t1_movedBendaIcons[itemIndex] = {
+			icon: bendaIcon,
+			originalX: bendaIcon.x,
+			originalY: bendaIcon.y,
+			originalWidth: originalWidth,
+			originalHeight: originalHeight
+		};
+		
+	console.log('✅ [L1T1] Icon', bendaIconName, 'berhasil dipindahkan ke kotak', numberValue);
+	console.log('📍 Posisi: (', targetBox.x, ',', targetBox.y, ')');
+	console.log('📏 Ukuran:', originalWidth, 'x', originalHeight, '→', bendaIcon.width, 'x', bendaIcon.height);
+	console.log('📐 Rasio skala:', scaleRatio.toFixed(2));
+		
+	} catch (e) {
+		console.error('❌ [L1T1] Error moving benda icon:', e.message);
+	}
+}
+
+// Fungsi untuk update visual kotak jawaban
 function lvl1t1_updateAnswerBox(boxIndex, numberValue, runtime) {
 	const rt = runtime || lvl1t1_runtime;
 	if (!rt) {
@@ -49,39 +148,51 @@ function lvl1t1_updateAnswerBox(boxIndex, numberValue, runtime) {
 		return;
 	}
 	
-	const boxName = lvl1t1_answerBoxes[boxIndex];
+	// Pindahkan icon benda ke kotak yang sesuai
+	// boxIndex = urutan completion (0-4)
+	// numberValue = angka jawaban yang benar (1-5)
 	
-	try {
-		const boxObject = rt.objects[boxName];
-		if (boxObject) {
-			const instances = boxObject.getAllInstances();
-			if (instances.length > 0) {
-				const box = instances[0];
-				
-				// Jika box punya Text property, update text
-				if (box.text !== undefined) {
-					box.text = numberValue.toString();
-					console.log('📝 [L1T1] Updated box', boxIndex + 1, 'with number:', numberValue);
-				}
-				
-				// Jika box punya AnimationFrame, set ke frame tertentu
-				// Frame 0 = kosong, Frame 1-5 = angka 1-5
-				if (box.animationFrame !== undefined && numberValue >= 1 && numberValue <= 5) {
-					box.animationFrame = numberValue; // Set ke frame angka
-					console.log('🎬 [L1T1] Updated box', boxIndex + 1, 'animation frame to:', numberValue);
-				}
-			}
+	// Item index sama dengan urutan completion
+	const itemIndex = boxIndex;
+	
+	lvl1t1_moveBendaToBox(itemIndex, numberValue, rt);
+}
+
+// Fungsi untuk reset semua icon benda
+function lvl1t1_resetAllBendaIcons() {
+	const rt = lvl1t1_runtime;
+	if (!rt) return;
+	
+	lvl1t1_bendaIcons.forEach((bendaIconName, index) => {
+		try {
+			const bendaIconObject = rt.objects[bendaIconName];
+			if (!bendaIconObject) return;
+			
+			const instances = bendaIconObject.getAllInstances();
+			if (instances.length === 0) return;
+			
+			const icon = instances[0];
+			
+			// Reset ke posisi asli (di scene)
+			// Posisi asli tergantung layout
+			// Untuk sekarang, hanya reset visibility
+			icon.isVisible = true;
+			icon.opacity = 1;
+			
+		} catch (e) {
+			console.warn('⚠️ [L1T1] Error resetting benda icon:', bendaIconName, e.message);
 		}
-	} catch (e) {
-		console.warn('⚠️ [L1T1] Could not update box:', boxName, e.message);
-	}
+	});
+	
+	lvl1t1_movedBendaIcons = [];
+	console.log('↩️ [L1T1] All benda icons reset');
 }
 
 // ========================================
-// DETAIL VIEW FUNCTIONS
+// FUNGSI DETAIL VIEW
 // ========================================
 
-// Function to hide all detail views
+// Fungsi untuk menyembunyikan semua detail view
 function lvl1t1_hideAllDetailViews(runtime) {
 	const rt = runtime || lvl1t1_runtime;
 	if (!rt) {
@@ -89,7 +200,7 @@ function lvl1t1_hideAllDetailViews(runtime) {
 		return;
 	}
 	
-	// Hide all detail objects (the actual detail sprites)
+	// Sembunyikan semua objek detail (sprite detail)
 	lvl1t1_items.forEach(item => {
 		try {
 			const objectClass = rt.objects[item.detailName];
@@ -107,7 +218,7 @@ function lvl1t1_hideAllDetailViews(runtime) {
 	console.log('👁️ [L1T1] All detail views hidden');
 }
 
-// Function to show detail view
+// Fungsi untuk menampilkan detail view
 function lvl1t1_showDetailView(itemIndex, runtime) {
 	const rt = runtime || lvl1t1_runtime;
 	if (!rt) {
@@ -119,7 +230,7 @@ function lvl1t1_showDetailView(itemIndex, runtime) {
 	const detailObjectName = item.detailName; // e.g., '1selimutdetaillvl1'
 	
 	try {
-		// Access detail object (the ACTUAL detail sprite)
+	// Ambil objek detail (sprite detail sebenarnya)
 		const objectClass = rt.objects[detailObjectName];
 		
 		if (objectClass) {
@@ -127,7 +238,7 @@ function lvl1t1_showDetailView(itemIndex, runtime) {
 			if (instances.length > 0) {
 				const detailSprite = instances[0];
 				
-				// Store original position to restore later
+				// Simpan posisi asli untuk restore nanti
 				const originalX = detailSprite.x;
 				const originalY = detailSprite.y;
 				const originalWidth = detailSprite.width;
@@ -135,28 +246,28 @@ function lvl1t1_showDetailView(itemIndex, runtime) {
 				const originalZElevation = detailSprite.zElevation;
 				const originalOpacity = detailSprite.opacity;
 				
-				// Move to center of screen (640, 360 for 1280x720)
+				// Pindahkan ke tengah layar (640, 360 untuk 1280x720)
 				detailSprite.x = 640;
 				detailSprite.y = 360;
 				
-				// Set FIXED SIZE (400x400) instead of scale multiplier
+				// Set ukuran FIXED (400x400) bukan pakai skala
 				detailSprite.width = 400;
 				detailSprite.height = 400;
 				
-				// Set high Z-elevation to be on top
+				// Set Z-elevation tinggi agar di atas
 				detailSprite.zElevation = 1000;
 				
-				// Make sure it's fully opaque
+				// Pastikan opacity penuh
 				detailSprite.opacity = 1;
 				
-				// Show detail
+				// Tampilkan detail
 				detailSprite.isVisible = true;
 				
 				console.log('👁️ [L1T1] Showing pop-up detail:', detailObjectName);
 				console.log('📍 Position: (640, 360) | Size: 400x400 | Z: 1000 | Opacity: 1');
 				console.log('📐 Original size:', originalWidth, 'x', originalHeight);
 				
-				// Hide after 3 seconds and restore original properties
+				// Sembunyikan setelah 3 detik dan restore properti asli
 				setTimeout(() => {
 					detailSprite.isVisible = false;
 					detailSprite.x = originalX;
@@ -180,10 +291,10 @@ function lvl1t1_showDetailView(itemIndex, runtime) {
 }
 
 // ========================================
-// GAME LOGIC FUNCTIONS
+// FUNGSI LOGIKA GAME
 // ========================================
 
-// Function untuk klik kotak jawaban - DIPANGGIL DARI CONSTRUCT 3 EVENTS
+// Fungsi untuk klik kotak jawaban - DIPANGGIL DARI EVENT CONSTRUCT 3
 // numberValue = angka kotak yang di-klik (1, 2, 3, 4, atau 5)
 function lvl1t1_checkAnswer(numberValue, runtime) {
 	const rt = runtime || lvl1t1_runtime;
@@ -197,7 +308,7 @@ function lvl1t1_checkAnswer(numberValue, runtime) {
 		return;
 	}
 	
-	// Check if game is already completed
+	// Cek apakah game sudah selesai
 	if (lvl1t1_itemsCompleted >= 5) {
 		console.log('🎉 [L1T1] Game already completed!');
 		alert('🎉 Game sudah selesai!\n\nFinal Score: ' + lvl1t1_score + '\nRating: ' + lvl1t1_getStarRating(lvl1t1_score) + ' ⭐');
@@ -215,18 +326,18 @@ function lvl1t1_checkAnswer(numberValue, runtime) {
 	console.log('✅ Jawaban benar:', correctAnswer);
 	console.log('👆 Player jawab:', numberValue);
 	
-	// TRACKING: Simpan klik ke array (0-based index dari items)
-	lvl1t1_clickSequence.push(lvl1t1_currentItem);
-	
-	// UPDATE VISUAL: Tampilkan angka di kotak sesuai urutan klik
-	const boxIndex = lvl1t1_clickSequence.length - 1; // Kotak ke berapa (0-4)
-	lvl1t1_updateAnswerBox(boxIndex, numberValue, rt);
-	
 	if (numberValue === correctAnswer) {
-		// CORRECT ANSWER
+	// JAWABAN BENAR
 		const baseScore = 100;
 		const bonusScore = 50;
 		lvl1t1_score += baseScore + bonusScore;
+		
+	// UPDATE VISUAL: Tampilkan icon di kotak sesuai urutan completion
+	// itemsCompleted = 0 → kotak pertama (index 0)
+	// itemsCompleted = 1 → kotak kedua (index 1), dst
+		const boxIndex = lvl1t1_itemsCompleted; // 0-4
+		lvl1t1_updateAnswerBox(boxIndex, numberValue, rt);
+		
 		lvl1t1_itemsCompleted++;
 		
 		console.log('✅ [L1T1] BENAR!', item.name, '=', correctAnswer);
@@ -234,18 +345,18 @@ function lvl1t1_checkAnswer(numberValue, runtime) {
 		console.log('📊 Progress:', lvl1t1_itemsCompleted, '/5');
 		console.log('');
 		
-		// Show detail view sebagai reward
+	// Tampilkan detail view sebagai reward
 		lvl1t1_showDetailView(lvl1t1_currentItem, rt);
 		
-		// Update UI
+	// Update UI
 		lvl1t1_showFeedback(true, rt);
 		lvl1t1_updateScore(rt);
 		lvl1t1_updateProgress(rt);
 		
-		// Move to next item
+	// Pindah ke item berikutnya
 		lvl1t1_currentItem++;
 		
-		// Check if all items completed
+	// Cek apakah semua item sudah selesai
 		if (lvl1t1_itemsCompleted === 5) {
 			const stars = lvl1t1_getStarRating(lvl1t1_score);
 			console.log('');
@@ -258,7 +369,7 @@ function lvl1t1_checkAnswer(numberValue, runtime) {
 			console.log('=================================');
 			console.log('');
 			
-			// Show completion screen (after detail disappears)
+			// Tampilkan layar selesai (setelah detail hilang)
 			setTimeout(() => {
 				lvl1t1_showGameComplete(rt);
 			}, 3000);
@@ -266,19 +377,19 @@ function lvl1t1_checkAnswer(numberValue, runtime) {
 			console.log('📝 Tugas selanjutnya:', lvl1t1_items[lvl1t1_currentItem].name);
 			console.log('💡 Hint: Hitung', lvl1t1_items[lvl1t1_currentItem].name, 'di kamar');
 			
-			// Update task display after feedback disappears
+			// Update tampilan tugas setelah feedback hilang
 			setTimeout(() => {
 				lvl1t1_updateCurrentTask(rt);
 			}, 2000);
 		}
 	} else {
-		// WRONG ANSWER
+	// JAWABAN SALAH
 		console.log('❌ [L1T1] SALAH! Try again.');
 		console.log('💡 Expected:', correctAnswer, '| Player answered:', numberValue);
 		console.log('💡 Hint: Hitung lagi', item.name, 'dengan teliti');
 		console.log('');
 		
-		// Show detailed wrong feedback
+	// Tampilkan feedback salah secara detail
 		const feedbackMessage = '❌ SALAH!\n\n' +
 			'Tugas: Hitung ' + item.name + '\n' +
 			'Jawaban Kamu: ' + numberValue + '\n' +
@@ -287,14 +398,14 @@ function lvl1t1_checkAnswer(numberValue, runtime) {
 		
 		alert(feedbackMessage);
 		
-		// Show feedback
+	// Tampilkan feedback
 		lvl1t1_showFeedback(false, rt);
 	}
 	
 	lvl1t1_isProcessing = false;
 }
 
-// Calculate star rating based on score
+// Hitung rating bintang berdasarkan skor
 function lvl1t1_getStarRating(finalScore) {
 	// Perfect score: 750 (5 items × 150)
 	// 3 stars: 600+ (80% correct)
@@ -307,10 +418,10 @@ function lvl1t1_getStarRating(finalScore) {
 }
 
 // ========================================
-// UI UPDATE FUNCTIONS
+// FUNGSI UPDATE UI
 // ========================================
 
-// Function to update all UI elements
+// Fungsi untuk update semua elemen UI
 function lvl1t1_updateUI(runtime) {
 	const rt = runtime || lvl1t1_runtime;
 	lvl1t1_updateScore(rt);
@@ -319,7 +430,7 @@ function lvl1t1_updateUI(runtime) {
 	lvl1t1_hideFeedback(rt);
 }
 
-// Update score display
+// Update tampilan skor
 function lvl1t1_updateScore(runtime) {
 	const rt = runtime || lvl1t1_runtime;
 	if (!rt) return;
@@ -333,7 +444,7 @@ function lvl1t1_updateScore(runtime) {
 	}
 }
 
-// Update progress display
+// Update tampilan progress
 function lvl1t1_updateProgress(runtime) {
 	const rt = runtime || lvl1t1_runtime;
 	if (!rt) return;
@@ -347,7 +458,7 @@ function lvl1t1_updateProgress(runtime) {
 	}
 }
 
-// Update current task display
+// Update tampilan tugas saat ini
 function lvl1t1_updateCurrentTask(runtime) {
 	const rt = runtime || lvl1t1_runtime;
 	if (!rt) return;
@@ -370,7 +481,7 @@ function lvl1t1_updateCurrentTask(runtime) {
 	}
 }
 
-// Show feedback popup (BENAR/SALAH)
+// Tampilkan popup feedback (BENAR/SALAH)
 function lvl1t1_showFeedback(isCorrect, runtime) {
 	const rt = runtime || lvl1t1_runtime;
 	
@@ -408,7 +519,7 @@ function lvl1t1_showFeedback(isCorrect, runtime) {
 	}
 }
 
-// Hide feedback popup
+// Sembunyikan popup feedback
 function lvl1t1_hideFeedback(runtime) {
 	const rt = runtime || lvl1t1_runtime;
 	if (!rt) return;
@@ -422,13 +533,13 @@ function lvl1t1_hideFeedback(runtime) {
 	}
 }
 
-// Show game completion popup
+// Tampilkan popup game selesai
 function lvl1t1_showGameComplete(runtime) {
 	const rt = runtime || lvl1t1_runtime;
 	const stars = lvl1t1_getStarRating(lvl1t1_score);
 	const starDisplay = '⭐'.repeat(stars);
 	
-	// TEMPORARY: Show browser alert with navigation option
+	// SEMENTARA: Tampilkan alert browser dengan opsi navigasi
 	const userConfirmed = confirm('🎉 SELAMAT!\n\n' + 
 		  'LEVEL 1 TINGKAT 1 SELESAI!\n\n' + 
 		  starDisplay + '\n\n' +
@@ -440,7 +551,7 @@ function lvl1t1_showGameComplete(runtime) {
 	console.log('[L1T1] Final Score: ' + lvl1t1_score);
 	console.log('[L1T1] Star Rating: ' + stars + ' stars');
 	
-	// Navigate to next level if user clicks OK
+	// Navigasi ke level berikutnya jika user klik OK
 	if (userConfirmed && rt) {
 		console.log('[L1T1] 🚀 Navigating to Level1_Tingkat2...');
 		rt.goToLayout("Level1_Tingkat2");
@@ -449,7 +560,7 @@ function lvl1t1_showGameComplete(runtime) {
 	
 	if (!rt) return;
 	
-	// Try to use Text object if exists
+	// Coba gunakan objek Text jika ada
 	const txtFeedback = rt.objects.txtFeedback;
 	if (txtFeedback) {
 		const instances = txtFeedback.getAllInstances();
@@ -464,15 +575,15 @@ function lvl1t1_showGameComplete(runtime) {
 }
 
 // ========================================
-// INITIALIZATION
+// INISIALISASI
 // ========================================
 
 runOnStartup(async runtime =>
 {
-	// Store runtime reference globally for this level
+	// Simpan referensi runtime secara global untuk level ini
 	lvl1t1_runtime = runtime;
 	
-	// Export functions to global scope with level-specific prefix
+	// Ekspor fungsi ke global scope dengan prefix khusus level
 	globalThis.lvl1t1_checkAnswer = (numberValue) => lvl1t1_checkAnswer(numberValue, runtime);
 	globalThis.lvl1t1_getStarRating = lvl1t1_getStarRating;
 	globalThis.lvl1t1_showDetailView = (itemIndex) => lvl1t1_showDetailView(itemIndex, runtime);
@@ -480,19 +591,23 @@ runOnStartup(async runtime =>
 	globalThis.lvl1t1_updateUI = () => lvl1t1_updateUI(runtime);
 	globalThis.lvl1t1_showFeedback = (isCorrect) => lvl1t1_showFeedback(isCorrect, runtime);
 	globalThis.lvl1t1_updateAnswerBox = (boxIndex, numberValue) => lvl1t1_updateAnswerBox(boxIndex, numberValue, runtime);
+	globalThis.lvl1t1_resetAllBendaIcons = lvl1t1_resetAllBendaIcons;
+	globalThis.lvl1t1_moveBendaToBox = (itemIndex, numberValue) => lvl1t1_moveBendaToBox(itemIndex, numberValue, runtime);
 	
-	console.log('✅ [L1T1] Game functions registered to global scope');
-	console.log('📦 lvl1t1_checkAnswer(numberValue) - Terima angka 1-5 dari kotak jawaban');
-	console.log('📦 lvl1t1_updateAnswerBox(boxIndex, numberValue) - Update visual kotak jawaban');
+	console.log('✅ [L1T1] Semua fungsi game sudah didaftarkan ke global scope');
+	console.log('📦 lvl1t1_checkAnswer(numberValue) - Terima angka 1-5 dari klik benda');
+	console.log('📦 lvl1t1_updateAnswerBox(boxIndex, numberValue) - Pindahkan icon benda ke kotak');
+	console.log('📦 lvl1t1_resetAllBendaIcons() - Reset semua icon benda');
+	console.log('💡 Icon benda akan otomatis pindah ke kotak yang sesuai!');
 	
 	runtime.addEventListener("beforeprojectstart", () => OnBeforeProjectStart_L1T1(runtime));
 });
 
 async function OnBeforeProjectStart_L1T1(runtime)
 {
-	// Initialize game state when Level1_Tingkat1 layout starts
+	// Inisialisasi state game saat layout Level1_Tingkat1 dimulai
 	runtime.addEventListener("beforelayoutstart", (e) => {
-		// Only run for Level1_Tingkat1 layout
+	// Hanya dijalankan untuk layout Level1_Tingkat1
 		if (e.layout.name !== "Level1_Tingkat1") return;
 		
 		lvl1t1_currentItem = 0;
@@ -500,6 +615,12 @@ async function OnBeforeProjectStart_L1T1(runtime)
 		lvl1t1_itemsCompleted = 0;
 		lvl1t1_isProcessing = false;
 		lvl1t1_clickSequence = []; // Reset click sequence
+		lvl1t1_movedBendaIcons = []; // Reset moved icons
+		
+	// Reset semua icon benda
+		setTimeout(() => {
+			lvl1t1_resetAllBendaIcons();
+		}, 100); // Small delay to ensure objects loaded
 		
 		console.log('=================================');
 		console.log('🎮 [L1T1] GAME INITIALIZED');
@@ -509,10 +630,10 @@ async function OnBeforeProjectStart_L1T1(runtime)
 		console.log('💡 Hint: Count the', lvl1t1_items[lvl1t1_currentItem].name, 'in the room');
 		console.log('');
 		
-		// Hide all detail views at start
+	// Sembunyikan semua detail view di awal
 		lvl1t1_hideAllDetailViews(runtime);
 		
-		// Initialize UI
+	// Inisialisasi UI
 		lvl1t1_updateUI(runtime);
 	});
 }
