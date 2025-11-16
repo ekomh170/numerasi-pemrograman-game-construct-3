@@ -1,5 +1,81 @@
 {
 	"name": "ES_Level1_Tingkat1_Reward",
-	"events": [],
+	"events": [
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "Mouse",
+					"sid": 122398508170574,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "reward_home"
+					}
+				}
+			],
+			"actions": [
+				{
+					"type": "script",
+					"language": "javascript",
+					"script": [
+						"lvl1t1reward_onHomeClick()"
+					]
+				}
+			],
+			"sid": 403314497898729
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "Mouse",
+					"sid": 455869626607570,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "reward_coba_lagi"
+					}
+				}
+			],
+			"actions": [
+				{
+					"type": "script",
+					"language": "javascript",
+					"script": [
+						"lvl1t1reward_onCobaLagiClick()"
+					]
+				}
+			],
+			"sid": 675364576684579
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "Mouse",
+					"sid": 343160557609748,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "reward_next_game"
+					}
+				}
+			],
+			"actions": [
+				{
+					"type": "script",
+					"language": "javascript",
+					"script": [
+						"lvl1t1reward_onNextGameClick()"
+					]
+				}
+			],
+			"sid": 752942788520933
+		}
+	],
 	"sid": 258491063953114
 }

@@ -1,0 +1,10 @@
+{
+	"name": "txtTimeGame",
+	"plugin-id": "Text",
+	"sid": 528321132229647,
+	"isGlobal": false,
+	"editorNewInstanceIsReplica": true,
+	"instanceVariables": [],
+	"behaviorTypes": [],
+	"effectTypes": []
+}
